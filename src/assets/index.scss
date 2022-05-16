@@ -1,0 +1,14 @@
+@use "vars";
+
+:root{
+  accent-color: vars.$accent;
+}
+
+
+body{
+  margin: 0;
+}
+
+* {
+  background-color: vars.$el-bg;
+}
