@@ -7,8 +7,11 @@
 
 body{
   margin: 0;
+  font-family: Poppins,sans-serif;
+  letter-spacing: 1px;
 }
 
 * {
   background-color: vars.$el-bg;
+  color: white;
 }
