@@ -2,6 +2,10 @@
   <nav id="navbar">
     <ViewsTabs/>
   </nav>
+  <div id="content">
+    <router-view></router-view>
+  </div>
+
 
 </template>
 
@@ -12,8 +16,9 @@ import ViewsTabs from "../components/ViewsTabs.vue";
 
 <style lang="scss">
 #navbar{
-  height: 50px;
-  position: relative;
+  padding-top: 16px;
+  width: 100%;
+  position: absolute;
 
   ul {
     background: none;
@@ -30,5 +35,14 @@ import ViewsTabs from "../components/ViewsTabs.vue";
       background: none;
     }
   }
+}
+
+#content{
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0 16px;
+  padding-top: calc(50px + 16px);
+
+  background: none;
 }
 </style>

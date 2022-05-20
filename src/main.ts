@@ -4,13 +4,29 @@ import "./assets/index.scss"
 
 import App from "./App.vue";
 import Dashboard from "./views/Dashboard.vue"
+import Login from "./views/Login.vue"
+import Board from "./components/Board.vue"
+import Empty from "./views/Empty.vue"
+import {setRouter} from "./others";
+import apiManager from "./apiManager";
 
 const routes: RouteRecordRaw[] = [
-    {path: "/", redirect: "/dashboard"},
+
+    {path: "/", redirect: "/login"},
+    {path: "/login", component: Login},
     {
         path: "/dashboard",
         component: Dashboard,
-        children: []
+        children: [
+            {
+                path:"board",
+                component: Board,
+            },
+            {
+                path:"calendar",
+                component: Empty,
+            },
+        ]
     }
 ]
 
@@ -20,16 +36,26 @@ const router = createRouter({
     routes
 })
 
+router.beforeEach((to, from, next) => {
+    console.log(to.path)
+    if (to.path!=="/login"){
+        if (apiManager.isAuthorised()){
+            next()
+        }
+        else{
+            next({
+                path:"/login"
+            })
+        }
+    }
+    else{
+        next()
+    }
 
+})
+
+setRouter(router)
 const app = createApp(App)
 app.use(router)
     .mount('#app')
 
-app.config.globalProperties.$vroute = (path: string) => {
-    let url = new URL(path);
-    if (url.origin !== location.origin) {
-        location.assign(url)
-    } else {
-        router.push(path)
-    }
-}

@@ -1,7 +1,8 @@
 <template>
   <ul id="views-nav">
-    <li><TabButton>Board</TabButton></li>
-    <li><TabButton>Calendar</TabButton></li>
+    <li><TabButton url="/dashboard/board">Board</TabButton></li>
+    <li><TabButton url="/dashboard/calendar">Calendar</TabButton></li>
+
 
   </ul>
 </template>
@@ -19,6 +20,7 @@ import TabButton from "./TabButton.vue";
     font-size: 16px;
     letter-spacing: 2px;
     font-weight: bold;
+    background: transparent;
   }
 
 }
