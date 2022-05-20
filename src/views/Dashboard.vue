@@ -1,5 +1,5 @@
 <template>
-  <nav id="navbar">
+  <nav id="navbar vlayer">
     <ViewsTabs/>
   </nav>
   <div id="content">
@@ -21,7 +21,6 @@ import ViewsTabs from "../components/ViewsTabs.vue";
   position: absolute;
 
   ul {
-    background: none;
     display: flex;
     margin: 0;
     gap: 24px;
@@ -32,7 +31,7 @@ import ViewsTabs from "../components/ViewsTabs.vue";
 
     li {
       list-style: none;
-      background: none;
+
     }
   }
 }

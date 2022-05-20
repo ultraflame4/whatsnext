@@ -8,7 +8,7 @@ import Login from "./views/Login.vue"
 import Board from "./components/Board.vue"
 import Empty from "./views/Empty.vue"
 import {setRouter} from "./others";
-import apiManager from "./apiManager";
+import apiManager from "./apis/apiManager";
 
 const routes: RouteRecordRaw[] = [
 
@@ -55,7 +55,9 @@ router.beforeEach((to, from, next) => {
 })
 
 setRouter(router)
+apiManager.start()
 const app = createApp(App)
+
 app.use(router)
     .mount('#app')
 

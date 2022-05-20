@@ -8,6 +8,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@googleapis/docs": "^0.4.1",
+    "@types/gapi": "^0.0.42",
+
+    "@types/google.accounts": "^0.0.1",
+    "jose": "^4.8.1",
     "sass": "^1.51.0",
     "vue": "^3.2.33",
     "vue-router": "^4.0.15"
