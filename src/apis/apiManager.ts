@@ -1,7 +1,7 @@
 import {decodeJwt} from "jose";
 
 import {GoogleAuthManager} from "./google";
-import {googleclientId} from "./others";
+import {googleclientId, googleScopes} from "./others";
 
 namespace loggedIn {
     export let google = false
@@ -23,9 +23,10 @@ function initGoogleClient() {
     gapi.load("client",args => {
         gapi.client.init({
             clientId: googleclientId,
-            scope: "https://www.googleapis.com/auth/calendar profile",
+            scope: googleScopes,
             discoveryDocs: [
-                "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"
+                "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
+                "https://people.googleapis.com/$discovery/rest?version=v1"
             ]
         }).then(value => {
             console.log(value)

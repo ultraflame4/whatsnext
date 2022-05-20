@@ -1,63 +1,109 @@
-import {CallbackCollection, googleclientId} from "./others";
+import {CallbackCollection, googleclientId, googleScopes} from "./others";
 import loggedIn from "./apiManager";
 
 
 
-export namespace GoogleAuthManager{
+
+export namespace GoogleAuthManager {
     import TokenResponse = google.accounts.oauth2.TokenResponse;
     let authenticated = false;
     export const login = new CallbackCollection()
     export const logout = new CallbackCollection()
 
+    let userEmail = ""
+    let currentAccessToken = ""
+    let currentExpire:number|null = null
+
     const client = google.accounts.oauth2.initTokenClient({
         client_id: googleclientId,
-        scope: "https://www.googleapis.com/auth/calendar",
-        callback: (tokenResponse:TokenResponse) => {
-            console.log("New Token!")
-            console.log(tokenResponse)
+        scope: googleScopes,
+        callback: (tokenResponse: TokenResponse) => {
 
-            if (tokenResponse.error!==undefined){
+            if (tokenResponse.error !== undefined) {
 
                 logout.dispatch()
                 console.error("API: An unknown error has occured")
                 console.error(tokenResponse.error)
                 console.log(tokenResponse)
-            }
-            else{
+
+            } else {
                 authenticated = true;
-                if (tokenResponse && tokenResponse.access_token){
-                    console.log(gapi.client)
-                    console.log("API")
-
-
-                    gapi.client.setToken({access_token:tokenResponse.access_token})
-
-
-                    gapi.client.load("calendar","v3",() => {
-                        console.log("Test2")
-                        //@ts-ignore
-                        console.log(gapi.client.calendar)
-                    })
-                }
-
-
-                setTimeout(()=>{
-                    console.log("Error, token expired")
-                    console.log(parseInt(tokenResponse.expires_in)-1)
-                    authenticated = false;
-                    client.requestAccessToken()
-                },(parseInt(tokenResponse.expires_in)-1)*1000)
-                login.dispatch()
+                processToken(tokenResponse.expires_in, tokenResponse.access_token)
             }
         }
     })
 
+    function processToken(tokenExpire_: string, accessToken: string) {
+        const tokenExpire = parseInt(tokenExpire_)
 
-    export function requestUserLogin(){
-        client.requestAccessToken()
+
+        gapi.client.setToken({access_token: accessToken})
+
+
+        gapi.client.people.people.get({
+            personFields: "names,emailAddresses",
+            resourceName: "people/me"
+        }).then(response => { // store current user email into localStorage as hint for next time.
+            console.log(response)
+            userEmail=(<gapi.client.people.EmailAddress[]>response.result.emailAddresses).filter(e => e.metadata.primary)[0].value
+            localStorage.setItem("a",
+                // encode base 64
+                btoa(userEmail)
+            )
+        })
+        currentAccessToken=accessToken
+        currentExpire=new Date().getTime() + (tokenExpire-1) * 1000
+        localStorage.setItem("b", btoa(accessToken))
+        localStorage.setItem("c",
+            btoa((currentExpire).toString())
+        )
+
+
+        setTimeout(() => {
+            console.log("Error, token expired")
+            console.log("Expire:",currentExpire)
+            authenticated = false;
+            requestUserLogin()
+        }, (tokenExpire - 1) * 1000)
+        login.dispatch()
     }
 
-    export function isAuthenticated(){
+
+    export function userLogout() {
+        localStorage.clear()
+        // google.accounts.oauth2.revoke()
+    }
+
+    export function requestUserLogin() {
+        let A = localStorage.getItem("a")
+        let B = localStorage.getItem("b")
+        let C = localStorage.getItem("c")
+
+        let lastUser = A==null?null:atob(A)
+        let lastAccessToken = B==null?null:atob(B)
+        let lastExpire:null|number = C==null?null:parseInt(atob(C))
+
+        if (lastUser!=null&&lastAccessToken!=null&&lastExpire!=null){
+            // console.log("A")
+            let now = new Date().getTime()
+            if (lastExpire>now){
+                // console.log("Existing token. using...")
+                // console.log("Expire:",lastExpire,"now:",now)
+                processToken(((lastExpire-now)/1000).toString(),lastAccessToken)
+                return
+            }
+        }
+        if (lastUser != null) {
+            console.log(lastUser)
+            client.requestAccessToken({
+                hint: lastUser
+            })
+        } else {
+            client.requestAccessToken()
+        }
+    }
+
+    export function isAuthenticated() {
         return authenticated
     }
 
