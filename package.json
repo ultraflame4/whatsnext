@@ -10,7 +10,7 @@
   "dependencies": {
     "@googleapis/docs": "^0.4.1",
     "@types/gapi": "^0.0.42",
-
+    "@types/gapi.calendar": "^3.0.6",
     "@types/google.accounts": "^0.0.1",
     "jose": "^4.8.1",
     "sass": "^1.51.0",
