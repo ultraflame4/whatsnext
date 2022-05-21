@@ -3,11 +3,13 @@
     <h1>Login</h1>
     <p>This app uses <br>Google Calendar & Trello.</p>
     <!--  Google sign in button -->
-    <button v-if="!isgoogleLoggedIn" type="button" class="login-with-google-btn" @click="loginGoogle()" ref="googlesignin">
+    <button v-if="!isgoogleLoggedIn" type="button" class="login-with-google-btn" @click="loginGoogle()"
+            ref="googlesignin">
       Sign in with Google
     </button>
     <p v-else class="sign-in-success-login"> Google Signed In ✅</p>
-
+    <!--  Trello authentication  -->
+    <button class="trello-loginbutton login-button">Authenticate Trello</button>
 
   </div>
 </template>
@@ -20,7 +22,7 @@ import {GoogleAuthManager} from "../apis/google";
 const isgoogleLoggedIn = ref()
 
 GoogleAuthManager.login.on(() => {
-  isgoogleLoggedIn.value=true
+  isgoogleLoggedIn.value = true
 })
 
 function loginGoogle() {
@@ -37,7 +39,8 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-@use "../assets/vars";
+@use "../assets/vars.scss";
+
 
 #login-ctn {
   position: absolute;
@@ -67,7 +70,7 @@ onMounted(() => {
     text-align: center;
   }
 
-  .sign-in-success-login{
+  .sign-in-success-login {
     color: vars.$accent;
     font-weight: bolder;
     font-size: 12px;
@@ -75,7 +78,13 @@ onMounted(() => {
     padding: 8px;
     border-radius: 8px;
   }
+
+  .trello-loginbutton{
+    background-color:  #008FE4;
+    color: white;
+  }
 }
+
 
 
 </style>
