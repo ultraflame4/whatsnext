@@ -1,5 +1,6 @@
 import {CallbackCollection, googleclientId, googleScopes} from "./others";
 import loggedIn from "./apiManager";
+import {vRoute} from "../others";
 
 
 
@@ -32,6 +33,7 @@ export namespace GoogleAuthManager {
             }
         }
     })
+
 
     function processToken(tokenExpire_: string, accessToken: string) {
         const tokenExpire = parseInt(tokenExpire_)
@@ -71,10 +73,12 @@ export namespace GoogleAuthManager {
 
     export function userLogout() {
         localStorage.clear()
-        // google.accounts.oauth2.revoke()
+        google.accounts.oauth2.revoke(currentAccessToken,()=>{
+            vRoute("login")
+        })
     }
 
-    export function requestUserLogin() {
+    function getLastSessionData(){
         let A = localStorage.getItem("a")
         let B = localStorage.getItem("b")
         let C = localStorage.getItem("c")
@@ -82,18 +86,34 @@ export namespace GoogleAuthManager {
         let lastUser = A==null?null:atob(A)
         let lastAccessToken = B==null?null:atob(B)
         let lastExpire:null|number = C==null?null:parseInt(atob(C))
+        return {lastUser,lastAccessToken,lastExpire}
+    }
 
+    /*
+    Returns true if succesful
+     */
+    function loginWithExistingToken():boolean{
+        const {lastUser,lastAccessToken,lastExpire} = getLastSessionData()
         if (lastUser!=null&&lastAccessToken!=null&&lastExpire!=null){
             // console.log("A")
             let now = new Date().getTime()
             if (lastExpire>now){
-                // console.log("Existing token. using...")
+                console.log("Logging in with existing token...")
                 // console.log("Expire:",lastExpire,"now:",now)
                 processToken(((lastExpire-now)/1000).toString(),lastAccessToken)
-                return
+                return true
             }
         }
-        if (lastUser != null) {
+        return false
+    }
+
+    export function requestUserLogin() {
+        let lastUser = getLastSessionData().lastUser
+
+        if (loginWithExistingToken()){
+
+        }
+        else if (lastUser != null) {
             console.log(lastUser)
             client.requestAccessToken({
                 hint: lastUser

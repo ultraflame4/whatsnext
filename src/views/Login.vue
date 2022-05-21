@@ -9,20 +9,22 @@
     </button>
     <p v-else class="sign-in-success-login"> Google Signed In ✅</p>
     <!--  Trello authentication  -->
-    <button class="trello-loginbutton login-button">Authenticate Trello</button>
+    <button class="trello-loginbutton login-button" disabled ref="trellosignin">Authenticate Trello</button>
 
   </div>
 </template>
 
 <script lang="ts" setup>
 
-import {onMounted, ref} from "vue";
+import {onMounted, Ref, ref} from "vue";
 import {GoogleAuthManager} from "../apis/google";
 
 const isgoogleLoggedIn = ref()
+const trellosignin = <Ref<HTMLButtonElement>><any>ref(null)
 
 GoogleAuthManager.login.on(() => {
   isgoogleLoggedIn.value = true
+  trellosignin.value.disabled=false
 })
 
 function loginGoogle() {
