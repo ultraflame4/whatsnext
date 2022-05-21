@@ -13,6 +13,6 @@ export namespace TrelloAuthManager {
     }
 
     export function requestAuthentication() {
-        Trello
+
     }
 }
