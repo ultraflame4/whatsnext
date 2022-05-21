@@ -32,4 +32,33 @@ declare namespace Trello{
   function get(path:string,params?:Object,success?:()=>void,error?:()=>void);
   function post(path:string,params?:Object,success?:()=>void,error?:()=>void);
   function put(path:string,params?:Object,success?:()=>void,error?:()=>void);
+  function del(path:string,params?:Object,success?:()=>void,error?:()=>void);
+
+
+}
+
+declare namespace Trello.actions{
+  function get(id:string, params?:Object, success?:()=>void,error?:()=>void);
+}
+declare namespace Trello.cards{
+  function get(id:string, params?:Object, success?:()=>void,error?:()=>void);
+}
+declare namespace Trello.checklists{
+  function get(id:string, params?:Object, success?:()=>void,error?:()=>void);
+}
+
+declare namespace Trello.boards{
+  function get(id:string, params?:Object, success?:()=>void,error?:()=>void);
+}
+
+declare namespace Trello.lists{
+  function get(id:string, params?:Object, success?:()=>void,error?:()=>void);
+}
+
+declare namespace Trello.members{
+  function get(id:string, params?:Object, success?:()=>void,error?:()=>void);
+}
+
+declare namespace Trello.organizations{
+  function get(id:string, params?:Object, success?:()=>void,error?:()=>void);
 }
