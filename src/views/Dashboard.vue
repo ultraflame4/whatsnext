@@ -10,15 +10,17 @@
       <div>
 
       </div>
+      <h2 style="grid-row-start: 3">
+        Boards
+      </h2>
       <div class="sidebar-section">
-        <h1>
-          Boards
-        </h1>
+
         <SectionCheckbox v-for="(i,index) in trelloBoards" name="board" :radio="true" :fullbar="true"
                          :checked="index===0?'true':'false'">{{ i.name }}
         </SectionCheckbox>
-        <SectionCheckbox :radio="true" :fullbar="true" name="board">test1</SectionCheckbox>
-        <SectionCheckbox :radio="true" :fullbar="true" name="board">test2</SectionCheckbox>
+        <SectionCheckbox v-if="loginBypassed" v-for="index in 11" :radio="true" :fullbar="true" name="board"
+                         :checked="index===0?'true':'false'">test {{index}}
+        </SectionCheckbox>
 
       </div>
 
@@ -36,9 +38,12 @@ import ViewsTabs from "../components/ViewsTabs.vue";
 import SectionCheckbox from "../components/SectionCheckbox.vue";
 import {computed, onMounted, ref} from "vue";
 import {TrelloApi} from "../apis/trello";
+import {Bypass} from "../apis/others";
 
 
 const trelloBoards = ref<Trello.BoardObject[]>([]);
+const loginBypassed = ref(Bypass)
+
 onMounted(() => {
   TrelloApi.getAllOpenBoards().then(boards => {
     console.log("test")
@@ -71,7 +76,7 @@ onMounted(() => {
   padding: 0 16px;
   padding-bottom: 16px;
   min-height: 0;
-  grid-template-rows: 48px 128px repeat(2, minmax(32px, calc(calc(100%) / 2)));
+  grid-template-rows: 48px 128px 24px repeat(2, fit-content(calc(calc(100% - 202px) / 2)));
 
   & > * {
     margin: 0;
@@ -90,14 +95,22 @@ onMounted(() => {
     align-self: center;
   }
 
+  & > h2 {
+    font-size: 12px;
+    text-align: start;
+    width: fit-content;
+    margin: auto 4px;
+    min-height: 0;
+    height: fit-content;
+    letter-spacing: 2px;
+    font-weight: 700;
+  }
+
   & > .sidebar-section {
-    & > h1 {
-      font-size: 12px;
-      text-align: start;
-      margin: 8px 4px;
-      letter-spacing: 2px;
-      font-weight: 700;
-    }
+    min-height: 32px;
+    max-height: 100%;
+    height: fit-content;
+    overflow-y: auto;
 
   }
 

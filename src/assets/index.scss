@@ -75,3 +75,19 @@ body{
   cursor: pointer !important;
 
 }
+
+::-webkit-scrollbar {
+  width: 4px;
+
+
+}
+::-webkit-scrollbar-track {
+  background: rgba(vars.$el-bg, .1);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: vars.$accent;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
