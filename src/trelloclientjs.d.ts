@@ -20,6 +20,7 @@ declare namespace Trello {
     type callback = (...args:any) => void
 
     function authorize(opts: TrelloAuthorizationOptions);
+    function setToken(token: string);
 
     function rest(method: "GET" | "POST" | "PUT" | "DELETE", path: string, params?: Object, success?: callback, error?: callback);
 

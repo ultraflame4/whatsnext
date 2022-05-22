@@ -92,13 +92,13 @@ export namespace GoogleAuthManager {
     /*
     Returns true if succesful
      */
-    function loginWithExistingToken():boolean{
+    export function loginWithExistingToken():boolean{
         const {lastUser,lastAccessToken,lastExpire} = getLastSessionData()
         if (lastUser!=null&&lastAccessToken!=null&&lastExpire!=null){
             // console.log("A")
             let now = new Date().getTime()
             if (lastExpire>now){
-                console.log("Logging in with existing token...")
+                console.log("[GSI] Logging in with existing token...")
                 // console.log("Expire:",lastExpire,"now:",now)
                 processToken(((lastExpire-now)/1000).toString(),lastAccessToken)
                 return true
@@ -126,5 +126,4 @@ export namespace GoogleAuthManager {
     export function isAuthenticated() {
         return authenticated
     }
-
 }

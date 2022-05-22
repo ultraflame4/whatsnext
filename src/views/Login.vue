@@ -4,12 +4,15 @@
     <p>This app uses <br>Google Calendar & Trello.</p>
     <!--  Google sign in button -->
     <button v-if="!isgoogleLoggedIn" type="button" class="login-with-google-btn" @click="loginGoogle()"
-            ref="googlesignin">
+            :disabled="isautologin">
       Sign in with Google
     </button>
     <p v-else class="sign-in-success-login"> Google Signed In ✅</p>
     <!--  Trello authentication  -->
-    <button class="trello-loginbutton login-button" disabled ref="trellosignin" @click="loginTrello()">Authenticate Trello</button>
+    <button v-if="!istrelloLoggedIn" class="trello-loginbutton login-button" :disabled="!isgoogleLoggedIn" @click="loginTrello()">Authenticate
+      Trello
+    </button>
+    <p v-else class="sign-in-success-login"> Trello Authenticated ✅</p>
 
   </div>
 </template>
@@ -20,12 +23,23 @@ import {onMounted, Ref, ref} from "vue";
 import {GoogleAuthManager} from "../apis/google";
 import {TrelloAuthManager} from "../apis/trello";
 
-const isgoogleLoggedIn = ref()
-const trellosignin = <Ref<HTMLButtonElement>><any>ref(null)
+const isgoogleLoggedIn = ref(false)
+const istrelloLoggedIn = ref(false)
+const isautologin = ref(true)
+
 
 GoogleAuthManager.login.on(() => {
   isgoogleLoggedIn.value = true
-  trellosignin.value.disabled=false
+  // attempt auto login to trello
+  TrelloAuthManager.useExistingToken().then(() => {
+    console.log("trello auto login success")
+  }).catch(reason => {
+    console.log("trello auto login failed", reason)
+  })
+})
+
+TrelloAuthManager.login.on(() => {
+  istrelloLoggedIn.value = true
 })
 
 function loginGoogle() {
@@ -34,12 +48,20 @@ function loginGoogle() {
 }
 
 function loginTrello() {
+  console.log("Trello login")
   TrelloAuthManager.requestAuthentication()
 
 }
 
 onMounted(() => {
-
+  // trigger auto sign in flow
+  setTimeout(()=>{
+    console.log("Attempting google auto login")
+    if (!GoogleAuthManager.loginWithExistingToken()){
+      console.warn("Google auto login failed")
+      setTimeout(()=>{isautologin.value=false},500)
+    }
+  },1000)
 })
 
 
@@ -77,21 +99,13 @@ onMounted(() => {
     text-align: center;
   }
 
-  .sign-in-success-login {
-    color: vars.$accent;
-    font-weight: bolder;
-    font-size: 12px;
-    border: vars.$accent solid 2px;
-    padding: 8px;
-    border-radius: 8px;
-  }
 
-  .trello-loginbutton{
-    background-color:  #008FE4;
+
+  .trello-loginbutton {
+    background-color: #008FE4;
     color: white;
   }
 }
-
 
 
 </style>
