@@ -2,14 +2,12 @@ import {decodeJwt} from "jose";
 
 import {GoogleAuthManager} from "./google";
 import {googleclientId, googleScopes} from "./others";
+import {TrelloAuthManager} from "./trello";
 
-namespace loggedIn {
-    export let google = false
-    export let trello = false
-}
 
 function isAuthorised() {
-    return GoogleAuthManager.isAuthenticated() && loggedIn.trello
+    console.log(GoogleAuthManager.isAuthenticated() , TrelloAuthManager.isAuthenticated())
+    return GoogleAuthManager.isAuthenticated() && TrelloAuthManager.isAuthenticated()
 }
 
 export function start() {

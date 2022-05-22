@@ -28,12 +28,13 @@ export namespace GoogleAuthManager {
                 console.log(tokenResponse)
 
             } else {
-                authenticated = true;
+
                 processToken(tokenResponse.expires_in, tokenResponse.access_token)
             }
         }
     })
 
+    let currentTimeoutHandle:number|null = null
 
     function processToken(tokenExpire_: string, accessToken: string) {
         const tokenExpire = parseInt(tokenExpire_)
@@ -46,12 +47,19 @@ export namespace GoogleAuthManager {
             personFields: "names,emailAddresses",
             resourceName: "people/me"
         }).then(response => { // store current user email into localStorage as hint for next time.
+            authenticated = true;
             console.log(response)
             userEmail=(<gapi.client.people.EmailAddress[]>response.result.emailAddresses).filter(e => e.metadata.primary)[0].value
             localStorage.setItem("a",
                 // encode base 64
                 btoa(userEmail)
             )
+        }).catch(error => {
+            authenticated = false;
+            if (currentTimeoutHandle!=null) {
+                clearTimeout(currentTimeoutHandle)
+            }
+            console.error(error)
         })
         currentAccessToken=accessToken
         currentExpire=new Date().getTime() + (tokenExpire-1) * 1000
@@ -61,7 +69,7 @@ export namespace GoogleAuthManager {
         )
 
 
-        setTimeout(() => {
+        currentTimeoutHandle=setTimeout(() => {
             console.log("Error, token expired")
             console.log("Expire:",currentExpire)
             authenticated = false;

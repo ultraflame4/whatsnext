@@ -22,6 +22,7 @@
 import {onMounted, Ref, ref} from "vue";
 import {GoogleAuthManager} from "../apis/google";
 import {TrelloAuthManager} from "../apis/trello";
+import {vRoute} from "../others";
 
 const isgoogleLoggedIn = ref(false)
 const istrelloLoggedIn = ref(false)
@@ -40,6 +41,7 @@ GoogleAuthManager.login.on(() => {
 
 TrelloAuthManager.login.on(() => {
   istrelloLoggedIn.value = true
+  vRoute("/dashboard")
 })
 
 function loginGoogle() {
