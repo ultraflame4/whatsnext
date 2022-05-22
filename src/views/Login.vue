@@ -63,7 +63,7 @@ onMounted(() => {
       console.warn("Google auto login failed")
       setTimeout(()=>{isautologin.value=false},500)
     }
-  },1000)
+  },2000)
 })
 
 

@@ -6,7 +6,6 @@ import {TrelloAuthManager} from "./trello";
 
 
 function isAuthorised() {
-    console.log(GoogleAuthManager.isAuthenticated() , TrelloAuthManager.isAuthenticated())
     return GoogleAuthManager.isAuthenticated() && TrelloAuthManager.isAuthenticated()
 }
 
@@ -39,9 +38,6 @@ function initGoogleClient() {
     });
 
 }
-
-
-
 
 export default {
     isAuthorised,

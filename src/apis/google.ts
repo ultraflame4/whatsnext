@@ -66,8 +66,6 @@ export namespace GoogleAuthManager {
             resourceName: "people/me"
         }).then(response => { // store current user email into localStorage as hint for next time.
             login.dispatch()
-            console.log(response)
-
             userEmail = (<gapi.client.people.EmailAddress[]>response.result.emailAddresses).filter(e => e.metadata.primary)[0].value
             localStorage.setItem("a",
                 // encode base 64
