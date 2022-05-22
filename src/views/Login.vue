@@ -96,7 +96,8 @@ onMounted(() => {
   & > p {
     margin: 0;
     font-size: 12px;
-    color: #666;
+    color: vars.$bg-txt;
+
     font-weight: bold;
     text-align: center;
   }
