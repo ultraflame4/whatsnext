@@ -1,12 +1,11 @@
 import {decodeJwt} from "jose";
 
 import {GoogleAuthManager} from "./google";
-import {googleclientId, googleScopes} from "./others";
+import {Bypass, googleclientId, googleScopes} from "./others";
 import {TrelloAuthManager} from "./trello";
 
-
 function isAuthorised() {
-    return GoogleAuthManager.isAuthenticated() && TrelloAuthManager.isAuthenticated()
+    return (GoogleAuthManager.isAuthenticated() && TrelloAuthManager.isAuthenticated())||Bypass
 }
 
 export function start() {
@@ -42,5 +41,4 @@ function initGoogleClient() {
 export default {
     isAuthorised,
     start,
-
 }

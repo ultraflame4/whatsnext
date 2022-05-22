@@ -1,8 +1,6 @@
 <template>
   <button @click="gotoUrl()" ref="button">
-    <slot>
-
-    </slot>
+      <slot></slot>
   </button>
 </template>
 
@@ -40,13 +38,15 @@ onMounted(a)
 @use "../assets/vars";
 
 button {
+  $borderwidth: 2px;
 
   border: none;
   color: white;
   position: relative;
   cursor: pointer;
+  top: calc($borderwidth / 2)+2px;
 
-  top: 1px;
+  text-align: center;
 
   &::after {
     position: relative;
@@ -56,8 +56,11 @@ button {
     border: 0 solid vars.$accent;
     animation-name: widthshrink;
     animation-duration: 300ms;
-    border-bottom-width: 2px;
+    border-bottom-width: $borderwidth;
     width: 0;
+
+    top: - calc( $borderwidth / 2);
+
   }
 
   &:hover::after, &[a=true]::after {
