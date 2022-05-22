@@ -1,4 +1,3 @@
-
 declare namespace Trello {
 
     interface TrelloAuthorizationScope {
@@ -29,6 +28,11 @@ declare namespace Trello {
     function put(path: string, params?: Object, success?: () => void, error?: () => void);
 
     function del(path: string, params?: Object, success?: () => void, error?: () => void);
+
+    interface TrelloApiError {
+        code: string
+        message: string
+    }
 
     /**
      * Action Object
@@ -96,7 +100,7 @@ declare namespace Trello {
         width: number
     }
 
-    interface PreferencesObject{
+    interface PreferencesObject {
         permissionLevel: "board" | "org"
         hideVotes: boolean,
         voting: "enabled" | "disabled"
@@ -123,15 +127,26 @@ declare namespace Trello {
 
     type LabelColors = "green" | "yellow" | "orange" | "red" | "purple" | "blue" | "sky" | "lime" | "pink" | "black"
 
-    interface LabelNames{
+    interface LabelNames {
         [key: LabelColors]: string
+    }
+
+
+    interface LimitsObject {
+        status: "ok" | "warning"
+        disableAt: number
+        warnAt: number
+    }
+
+    interface Limits {
+        attachements: { perBoard: LimitsObject }
     }
 
     interface BoardObject {
         id: string
         name: string
         desc: string
-        descData: string
+        descData?: string
         closed: boolean
         idMemberCreator: string
         idOrganization: string
@@ -140,33 +155,159 @@ declare namespace Trello {
         shortUrl: string
         prefs: PreferencesObject
         labelNames: LabelNames
-
+        limits: Limits
+        starred: boolean
+        memberships: string
+        shortLink: string
+        powerUps: string
+        dateLastActivity: string
+        dateLastView: string
+        idTags: string
+        datePluginDisable?: string
+        creationMethod?: string
+        ixUpdate: number
+        templateGallery?: string
+        enterpriseOwned: boolean
 
     }
+
+    interface CardBadges{
+        attachmentsByTypes:Object
+        location:boolean
+        votes:number
+        viewingMemberVoted:boolean
+        subscribed:boolean
+        fogbugz:string
+        checkItems:number
+        checkItemsChecked:number
+        comments:number
+        attachments:number
+        description:boolean
+        due?:string
+        start?:string
+        dueComplete:boolean
+    }
+
+    interface CardCover{
+        idAttachment:string
+        color?:LabelColors
+        idUploadedBackground?:boolean
+        size?: "normal"
+        brightness?: "light" | "dark"
+        isTemplate?: boolean
+    }
+
+    interface CardObject{
+        id: string
+        address: string
+        badges:CardBadges
+        checkItemStates: Array<string>
+        closed: boolean
+        coordinates?:string
+        creationMethod?: string
+        dateLastActivity: string
+        desc: string
+        descData: Object
+        due?: string
+        dueReminder?: boolean
+        email: string
+        idBoard: string
+        idChecklists: Array<string|{id:string}>
+        idLabel: Array<string|{id:string,idBoard:string,name:string,color?:LabelColors}>
+        idList: string
+        idMembers: Array<string>
+        idMembersVoted: Array<string>
+        idShort: number
+        idAttachmentCover: string
+        labels: string[]
+        limits: Limits
+        locationName?: string
+        manualCoverAttachment: boolean
+        name: string
+        pos: number
+        shortLink: string
+        shortUrl: string
+        subscribed: boolean
+        cover:CardCover
+    }
+}
+type errorCallback = (e: Trello.TrelloApiError) => void;
+
+declare namespace NestedResources {
+
 }
 
 declare namespace Trello.actions {
-    function get(id: string, params?: { display?: boolean, entities?: false, fields?: string, member?: boolean, member_fields?: string, }, success?: () => void, error?: () => void);
-}
-declare namespace Trello.cards {
-    function get(id: string, params?: Object, success?: () => void, error?: () => void);
-}
-declare namespace Trello.checklists {
-    function get(id: string, params?: Object, success?: () => void, error?: () => void);
+    interface GetActionsParam {
+        display?: boolean,
+        entities?: false,
+        fields?: string,
+        member?: boolean,
+        member_fields?: string,
+        memberCreator?: boolean,
+        memberCreator_fields?: string,
+    }
+
+    function get(id: string, params?: GetActionsParam, success?: (data: Object) => void, error?: errorCallback);
 }
 
+
 declare namespace Trello.boards {
-    function get(id: string, params?: Object, success?: () => void, error?: () => void);
+    interface GetBoardParam {
+        actions?: string
+        boardStars?: "mime" | "none"
+        cards?: string
+        card_pluginData?: boolean
+        checklists?: string
+        customFields?: boolean
+        fields?: string
+        labels?: string
+        lists?: string
+        members?: string
+        memberships?: string
+        pluginData?: boolean
+        organization?: boolean
+        organization_pluginData?: boolean
+        myPrefs?: boolean
+        tags?: boolean
+    }
+
+    function get(id: string, params?: GetBoardParam, success?: (data: BoardObject) => void, error?: errorCallback);
+}
+declare namespace Trello.cards {
+    interface GetCardParam {
+        fields?: string
+        actions?: string
+        attachments?: string
+        attachment_fields?: string
+        members?: boolean
+        members_fields?: boolean
+        membersVoted?: boolean
+        membersVoted_fields?: string
+        checkItemStates?: boolean
+        checklists?: "all" | "none"
+        checklists_fields?: string
+        board_fields?:string
+        list?:boolean
+        pluginData?: boolean
+        stickers?: boolean
+        stickers_fields?: string
+        customFieldItems?: boolean
+    }
+    function get(id: string, params?: GetCardParam, success?: (data: CardObject) => void, error?: errorCallback);
+}
+declare namespace Trello.checklists {
+    function get(id: string, params?: Object, success?: (data: Object) => void, error?: errorCallback);
 }
 
 declare namespace Trello.lists {
-    function get(id: string, params?: Object, success?: () => void, error?: () => void);
+    function get(id: string, params?: Object, success?: (data: Object) => void, error?: errorCallback);
 }
 
 declare namespace Trello.members {
-    function get(id: string, params?: Object, success?: () => void, error?: () => void);
+    function get(id: string, params?: Object, success?: (data: Object) => void, error?: errorCallback);
 }
 
 declare namespace Trello.organizations {
-    function get(id: string, params?: Object, success?: () => void, error?: () => void);
+    function get(id: string, params?: Object, success?: (data: Object) => void, error?: errorCallback);
 }
