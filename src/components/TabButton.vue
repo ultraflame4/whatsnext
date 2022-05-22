@@ -42,7 +42,7 @@ onMounted(a)
 button {
 
   border: none;
-
+  color: white;
   position: relative;
   cursor: pointer;
 

@@ -1,5 +1,5 @@
 <template>
-  <nav id="navbar vlayer">
+  <nav id="navbar" class="vlayer">
     <ViewsTabs/>
   </nav>
   <div id="content">
@@ -20,7 +20,7 @@ import ViewsTabs from "../components/ViewsTabs.vue";
   width: 100%;
   position: absolute;
 
-  ul {
+  &>ul {
     display: flex;
     margin: 0;
     gap: 24px;

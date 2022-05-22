@@ -19,11 +19,15 @@ const routes: RouteRecordRaw[] = [
         component: Dashboard,
         children: [
             {
-                path:"board",
+                path: "",
+                redirect:"/dashboard/board"
+            },
+            {
+                path: "board",
                 component: Board,
             },
             {
-                path:"calendar",
+                path: "calendar",
                 component: Empty,
             },
         ]
@@ -38,17 +42,15 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     console.log(to.path)
-    if (to.path!=="/login"){
-        if (apiManager.isAuthorised()){
+    if (to.path !== "/login") {
+        if (apiManager.isAuthorised()) {
             next()
-        }
-        else{
+        } else {
             next({
-                path:"/login"
+                path: "/login"
             })
         }
-    }
-    else{
+    } else {
         next()
     }
 
