@@ -17,17 +17,19 @@ declare namespace Trello {
         error?: () => void
     }
 
+    type callback = (...args:any) => void
+
     function authorize(opts: TrelloAuthorizationOptions);
 
     function rest(method: "GET" | "POST" | "PUT" | "DELETE", path: string, params?: Object, success?: () => void, error?: () => void);
 
-    function get(path: string, params?: Object, success?: () => void, error?: () => void);
+    function get(path: string, params?: Object, success?: callback, error?: callback);
 
-    function post(path: string, params?: Object, success?: () => void, error?: () => void);
+    function post(path: string, params?: Object, success?: callback, error?: callback);
 
-    function put(path: string, params?: Object, success?: () => void, error?: () => void);
+    function put(path: string, params?: Object, success?: callback, error?: callback);
 
-    function del(path: string, params?: Object, success?: () => void, error?: () => void);
+    function del(path: string, params?: Object, success?: callback, error?: callback);
 
     interface TrelloApiError {
         code: string
@@ -142,7 +144,7 @@ declare namespace Trello {
         attachements: { perBoard: LimitsObject }
     }
 
-    interface BoardObject {
+    export interface BoardObject {
         id: string
         name: string
         desc: string
