@@ -92,11 +92,13 @@ const computedCssStyles = computed(() => {
   padding: 0 8px;
   border-radius: 4px;
   gap: 8px;
+  transition: all 200ms ease-in;
 
   &[checked="true"] {
     background-color: vars.$accent!important;
     &>p{
-      font-weight: bold;
+      font-size: 16px;
+      font-weight: 600;
       color: black;
     }
   }
@@ -112,6 +114,8 @@ const computedCssStyles = computed(() => {
     font-size: 14px;
     letter-spacing: 1px;
     color: #ccc;
+    font-weight: 400;
+    transition: font-size 0.1s ease;
   }
 
   & > input {

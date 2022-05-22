@@ -17,7 +17,8 @@
         <SectionCheckbox v-for="(i,index) in trelloBoards" name="board" :radio="true" :fullbar="true"
                          :checked="index===0?'true':'false'">{{ i.name }}
         </SectionCheckbox>
-
+        <SectionCheckbox :radio="true" :fullbar="true" name="board">test1</SectionCheckbox>
+        <SectionCheckbox :radio="true" :fullbar="true" name="board">test2</SectionCheckbox>
 
       </div>
 
@@ -78,10 +79,10 @@ onMounted(() => {
   }
 
   & > h1 {
-    font-size: 16px;
+    font-size: 12px;
     text-align: center;
     margin: 0;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: 3px;
 
     color: vars.$bg-txt;
@@ -91,10 +92,10 @@ onMounted(() => {
 
   & > .sidebar-section {
     & > h1 {
-      font-size: 14px;
+      font-size: 12px;
       text-align: start;
       margin: 8px 4px;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
       font-weight: 700;
     }
 
