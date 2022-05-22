@@ -234,7 +234,11 @@ declare namespace Trello {
 type errorCallback = (e: Trello.TrelloApiError) => void;
 
 declare namespace NestedResources {
-
+    /**
+     // * @deprecated
+     * DO NOT USE THIS. THIS IS A TYPE PLACEHOLDER FOR NESTED RESOURCES
+     */
+    type NestedResource = any
 }
 
 declare namespace Trello.actions {
@@ -297,7 +301,16 @@ declare namespace Trello.cards {
     function get(id: string, params?: GetCardParam, success?: (data: CardObject) => void, error?: errorCallback);
 }
 declare namespace Trello.checklists {
-    function get(id: string, params?: Object, success?: (data: Object) => void, error?: errorCallback);
+    /**
+     * https://developer.atlassian.com/cloud/trello/rest/api-group-checklists/#api-checklists-id-get
+     */
+    interface GetChecklistParams{
+        cards?: NestedResources.NestedResource
+        checkItems?: "all" | "none"
+        checkItems_fields?: string
+        fields?: string
+    }
+    function get(id: string, params?: GetChecklistParams, success?: (data: Object) => void, error?: errorCallback);
 }
 
 declare namespace Trello.lists {
