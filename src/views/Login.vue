@@ -13,7 +13,6 @@
       Trello
     </button>
     <p v-else class="sign-in-success-login"> Trello Authenticated ✅</p>
-
   </div>
 </template>
 
@@ -28,10 +27,11 @@ const isgoogleLoggedIn = ref(false)
 const istrelloLoggedIn = ref(false)
 const isautologin = ref(true)
 
-
 GoogleAuthManager.login.on(() => {
+  console.log("Google auto login success")
   isgoogleLoggedIn.value = true
   // attempt auto login to trello
+  console.log("Attempint trello auto login")
   TrelloAuthManager.useExistingToken().then(() => {
     console.log("trello auto login success")
   }).catch(reason => {
@@ -58,12 +58,17 @@ function loginTrello() {
 onMounted(() => {
   // trigger auto sign in flow
   setTimeout(()=>{
+
     console.log("Attempting google auto login")
+
     if (!GoogleAuthManager.loginWithExistingToken()){
       console.warn("Google auto login failed")
-      setTimeout(()=>{isautologin.value=false},500)
+      isautologin.value=false
     }
-  },2000)
+    else{
+      console.log("Google auto login successful")
+    }
+  },1000)
 })
 
 

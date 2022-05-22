@@ -1,8 +1,7 @@
 import {CallbackCollection} from "./others";
+import {vRoute} from "../others";
 
-export namespace TrelloApi {
 
-}
 
 export namespace TrelloAuthManager {
 
@@ -33,7 +32,7 @@ export namespace TrelloAuthManager {
             const a = localStorage.getItem(trelloLocalStorageKey)
 
             if (a !== null) {
-                console.log("Using existing token")
+                console.log("[Trello] Using existing token")
                 Trello.setToken(a)
                 function onSuccess(boards: Trello.BoardObject[]) {
                     login.dispatch()
@@ -47,7 +46,9 @@ export namespace TrelloAuthManager {
 
                 Trello.rest("GET", "/members/me/boards", {}, onSuccess, onError)
             }
-            reject("No existing token")
+            else{
+                reject("No existing token")
+            }
         })
     }
 
@@ -85,3 +86,32 @@ export namespace TrelloAuthManager {
     }
 }
 
+export namespace TrelloApi {
+    export function request<T>(method: "GET" | "POST" | "PUT" | "DELETE", path: string, params?: Object):Promise<T>{
+        return new Promise<T>((resolve, reject) => {
+            function onSuccess(data:T) {
+                resolve(data)
+            }
+            function onError(error:Trello.TrelloApiError) {
+                console.warn("Warning Api Error",error)
+                if (error.code==="401"){
+                    console.warn("Trello Authentication failed")
+                    alert("Trello Authentication failed")
+                    TrelloAuthManager.logOut()
+                    vRoute("/login")
+                }
+                reject(error)
+            }
+
+            Trello.rest(method, path, params, onSuccess, onError)
+        })
+    }
+
+    export function getAllOpenBoards():Promise<Trello.BoardObject[]> {
+        return TrelloApi.request<Trello.BoardObject[]>("GET", "/members/me/boards", {filter:"open"})
+    }
+
+    export function getAllBoards():Promise<Trello.BoardObject[]> {
+        return TrelloApi.request<Trello.BoardObject[]>("GET", "/members/me/boards")
+    }
+}

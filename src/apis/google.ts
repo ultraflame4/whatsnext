@@ -30,7 +30,7 @@ export namespace GoogleAuthManager {
     const client = google.accounts.oauth2.initTokenClient({
         client_id: googleclientId,
         scope: googleScopes,
-        callback: (tokenResponse: TokenResponse) => {
+        callback: async (tokenResponse: TokenResponse) => {
 
             if (tokenResponse.error !== undefined) {
 
@@ -42,7 +42,7 @@ export namespace GoogleAuthManager {
             } else {
                 let ascopes = googleScopes.split(" ")
                 if (google.accounts.oauth2.hasGrantedAllScopes(tokenResponse,ascopes[0],...ascopes.slice(1))){
-                    processToken(tokenResponse.expires_in, tokenResponse.access_token)
+                    await processToken(tokenResponse.expires_in, tokenResponse.access_token)
                 }
                 else{
                     alert("Google OAuth2. Not All Scopes Granted\n All scopes must be granted to use this app.\n Please login again!")
@@ -54,23 +54,39 @@ export namespace GoogleAuthManager {
 
     let currentTimeoutHandle: number | null = null
 
+
     function processToken(tokenExpire_: string, accessToken: string) {
         const tokenExpire = parseInt(tokenExpire_)
 
-
         gapi.client.setToken({access_token: accessToken})
-
 
         gapi.client.people.people.get({
             personFields: "names,emailAddresses",
             resourceName: "people/me"
         }).then(response => { // store current user email into localStorage as hint for next time.
-            login.dispatch()
+
             userEmail = (<gapi.client.people.EmailAddress[]>response.result.emailAddresses).filter(e => e.metadata.primary)[0].value
             localStorage.setItem("a",
                 // encode base 64
                 btoa(userEmail)
             )
+
+            currentAccessToken = accessToken
+            currentExpire = new Date().getTime() + (tokenExpire - 1) * 1000
+            localStorage.setItem("b", btoa(accessToken))
+            localStorage.setItem("c",
+                btoa((currentExpire).toString())
+            )
+
+
+            currentTimeoutHandle = setTimeout(() => {
+                console.log("Error, token expired")
+                console.log("Expire:", currentExpire)
+
+                vRoute("/login")
+            }, (tokenExpire - 1) * 1000)
+            login.dispatch()
+
         }).catch(error => {
             logout.dispatch()
             if (currentTimeoutHandle != null) {
@@ -78,21 +94,8 @@ export namespace GoogleAuthManager {
             }
             console.error(error)
         })
-        currentAccessToken = accessToken
-        currentExpire = new Date().getTime() + (tokenExpire - 1) * 1000
-        localStorage.setItem("b", btoa(accessToken))
-        localStorage.setItem("c",
-            btoa((currentExpire).toString())
-        )
 
-
-        currentTimeoutHandle = setTimeout(() => {
-            console.log("Error, token expired")
-            console.log("Expire:", currentExpire)
-            logout.dispatch()
-            requestUserLogin()
-        }, (tokenExpire - 1) * 1000)
-        login.dispatch()
+        return
     }
 
 
@@ -129,10 +132,10 @@ export namespace GoogleAuthManager {
         return false
     }
 
-    export function requestUserLogin() {
+    export async function requestUserLogin() {
         let lastUser = getLastSessionData().lastUser
 
-        if (loginWithExistingToken()) {
+        if (await loginWithExistingToken()) {
 
         } else if (lastUser != null) {
             console.log(lastUser)

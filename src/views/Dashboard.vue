@@ -14,7 +14,11 @@
         <h1>
           Boards
         </h1>
-        <SectionCheckbox>test</SectionCheckbox>
+        <SectionCheckbox v-for="(i,index) in trelloBoards" name="board" :radio="true" :fullbar="true"
+                         :checked="index===0?'true':'false'">{{ i.name }}
+        </SectionCheckbox>
+
+
       </div>
 
     </div>
@@ -29,6 +33,18 @@
 
 import ViewsTabs from "../components/ViewsTabs.vue";
 import SectionCheckbox from "../components/SectionCheckbox.vue";
+import {computed, onMounted, ref} from "vue";
+import {TrelloApi} from "../apis/trello";
+
+
+const trelloBoards = ref<Trello.BoardObject[]>([]);
+onMounted(() => {
+  TrelloApi.getAllOpenBoards().then(boards => {
+    console.log("test")
+    trelloBoards.value = boards;
+  })
+})
+
 </script>
 
 <style lang="scss">
@@ -43,7 +59,7 @@ import SectionCheckbox from "../components/SectionCheckbox.vue";
   grid-template-columns: 256px auto;
 }
 
-#sidebar{
+#sidebar {
 
   display: grid;
   border-right: 2px solid vars.$lines;
@@ -54,14 +70,14 @@ import SectionCheckbox from "../components/SectionCheckbox.vue";
   padding: 0 16px;
   padding-bottom: 16px;
   min-height: 0;
-  grid-template-rows: 48px 128px repeat(2,minmax(32px,calc(calc(100%) / 2))) ;
+  grid-template-rows: 48px 128px repeat(2, minmax(32px, calc(calc(100%) / 2)));
 
-  &>*{
+  & > * {
     margin: 0;
     overflow: clip;
   }
 
-  &>h1 {
+  & > h1 {
     font-size: 16px;
     text-align: center;
     margin: 0;
@@ -73,8 +89,8 @@ import SectionCheckbox from "../components/SectionCheckbox.vue";
     align-self: center;
   }
 
-  &>.sidebar-section{
-    &>h1{
+  & > .sidebar-section {
+    & > h1 {
       font-size: 14px;
       text-align: start;
       margin: 8px 4px;
@@ -86,7 +102,7 @@ import SectionCheckbox from "../components/SectionCheckbox.vue";
 
 }
 
-#navbar{
+#navbar {
 
   padding-top: 16px;
   grid-column-start: 2;
@@ -95,7 +111,7 @@ import SectionCheckbox from "../components/SectionCheckbox.vue";
   grid-row-end: 2;
   border-bottom: 2px solid vars.$lines;
 
-  &>ul {
+  & > ul {
     display: flex;
     margin: 0;
     gap: 24px;
@@ -111,7 +127,7 @@ import SectionCheckbox from "../components/SectionCheckbox.vue";
   }
 }
 
-#content{
+#content {
   grid-column-start: 2;
   grid-column-end: 3;
   grid-row-start: 2;
