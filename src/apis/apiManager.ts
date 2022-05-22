@@ -14,8 +14,13 @@ export function start() {
     initGoogleClient()
 }
 
-
-
+export function logOutAll(){
+    GoogleAuthManager.userLogout()
+    TrelloAuthManager.logOut()
+    localStorage.clear()
+}
+//@ts-ignore
+window.wnLogOut = logOutAll
 
 function initGoogleClient() {
     gapi.load("client",args => {

@@ -10,6 +10,15 @@ export namespace TrelloAuthManager {
     export const logout = new CallbackCollection()
 
     let authenticated = false
+
+    login.on(() => {
+        authenticated = true
+    })
+
+    logout.on(() => {
+        authenticated = false
+    })
+
     const clientId: string = "ad0cb36225ffb74a5b7c5fc5e5d61d22"
 
     const trelloLocalStorageKey = "trello_token"
@@ -27,7 +36,6 @@ export namespace TrelloAuthManager {
                 console.log("Using existing token")
                 Trello.setToken(a)
                 function onSuccess(boards: Trello.BoardObject[]) {
-                    authenticated = true
                     login.dispatch()
                     resolve(undefined)
                 }
@@ -41,6 +49,11 @@ export namespace TrelloAuthManager {
             }
             reject("No existing token")
         })
+    }
+
+    export function logOut() {
+        localStorage.removeItem(trelloLocalStorageKey)
+        logout.dispatch()
     }
 
     export function requestAuthentication() {
@@ -59,12 +72,11 @@ export namespace TrelloAuthManager {
                     },
                     expiration: "30days",
                     success: () => {
-                        authenticated = true
+
                         login.dispatch()
                     },
                     error: () => {
                         console.warn("Trello Authentication failed")
-                        authenticated = false
                         logout.dispatch()
                     }
                 })
