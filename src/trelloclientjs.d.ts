@@ -21,7 +21,7 @@ declare namespace Trello {
 
     function authorize(opts: TrelloAuthorizationOptions);
 
-    function rest(method: "GET" | "POST" | "PUT" | "DELETE", path: string, params?: Object, success?: () => void, error?: () => void);
+    function rest(method: "GET" | "POST" | "PUT" | "DELETE", path: string, params?: Object, success?: callback, error?: callback);
 
     function get(path: string, params?: Object, success?: callback, error?: callback);
 
