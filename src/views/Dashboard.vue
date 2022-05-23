@@ -16,10 +16,10 @@
       <div class="sidebar-section">
 
         <SectionCheckbox v-for="(i,index) in trelloBoards" name="board" :radio="true" :fullbar="true"
-                         :checked="index===0?'true':'false'">{{ i.name }}
+                         :checked="index===0?'true':'false'" @click="vRoute(`./?id=${i.id}`)">{{ i.name }}
         </SectionCheckbox>
         <SectionCheckbox v-if="loginBypassed" v-for="index in 11" :radio="true" :fullbar="true" name="board"
-                         :checked="index===0?'true':'false'">test {{index}}
+                         :checked="index===0?'true':'false'" @click="vRoute(`./?id=${id}&istest=0`)">test {{index}}
         </SectionCheckbox>
 
       </div>
@@ -39,10 +39,13 @@ import SectionCheckbox from "../components/SectionCheckbox.vue";
 import {computed, onMounted, ref} from "vue";
 import {TrelloApi} from "../apis/trello";
 import {Bypass} from "../apis/others";
+import {vRoute} from "../others";
 
 
 const trelloBoards = ref<Trello.BoardObject[]>([]);
 const loginBypassed = ref(Bypass)
+
+
 
 onMounted(() => {
   TrelloApi.Board.getAllOpen().then(boards => {
@@ -117,7 +120,7 @@ onMounted(() => {
 
 #navbar {
 
-  padding-top: 16px;
+  //padding-top: 16px;
   grid-column-start: 2;
   grid-column-end: 3;
   grid-row-start: 1;
@@ -133,8 +136,10 @@ onMounted(() => {
     padding: 0 24px;
     align-items: center;
 
+
     li {
       list-style: none;
+      margin: auto 0;
 
     }
   }

@@ -5,7 +5,7 @@ import "./assets/index.scss"
 import App from "./App.vue";
 import Dashboard from "./views/Dashboard.vue"
 import Login from "./views/Login.vue"
-import Board from "./components/Board.vue"
+import Board from "./views/Board.vue"
 import Empty from "./views/Empty.vue"
 import {setRouter} from "./others";
 import apiManager from "./apis/apiManager";

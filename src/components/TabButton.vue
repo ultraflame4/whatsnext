@@ -45,21 +45,21 @@ button {
   position: relative;
   cursor: pointer;
   top: calc($borderwidth / 2)+2px;
-
+  height: fit-content;
   text-align: center;
 
   &::after {
     position: relative;
     content: "";
     display: block;
-    padding-top: 8px;
+    //padding-top: 8px;
     border: 0 solid vars.$accent;
     animation-name: widthshrink;
     animation-duration: 300ms;
     border-bottom-width: $borderwidth;
     width: 0;
 
-    top: - calc( $borderwidth / 2);
+    top: calc( $borderwidth / 2 + 8px);
 
   }
 

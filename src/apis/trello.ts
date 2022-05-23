@@ -1,5 +1,5 @@
-import {CallbackCollection} from "./others";
-import {ApiRateLimitedExecutor, vRoute} from "../others";
+import {CachedResource, CallbackCollection,ApiRateLimitedExecutor} from "./others";
+import {vRoute} from "../others";
 
 
 
@@ -85,6 +85,25 @@ export namespace TrelloAuthManager {
 
     }
 }
+
+
+export namespace TrelloCache{
+
+    namespace Board{
+        const boards = new CachedResource<Trello.BoardObject>();
+        function get(id: string) {
+            return boards.get({
+                find:item => item.id===id,
+                async getResource() {
+                    return await TrelloApi.request<Trello.BoardObject>("GET", `/boards/${id}`)
+                }
+            })
+
+        }
+    }
+}
+
+
 
 export namespace TrelloApi {
 
