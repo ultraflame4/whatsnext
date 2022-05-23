@@ -46,7 +46,6 @@ const loginBypassed = ref(Bypass)
 
 onMounted(() => {
   TrelloApi.Board.getAllOpen().then(boards => {
-    console.log("test")
     trelloBoards.value = boards;
   })
 })

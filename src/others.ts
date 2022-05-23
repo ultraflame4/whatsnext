@@ -16,7 +16,6 @@ export const vRoute = (path: string) => {
     }
 }
 
-
 export type ApiRateLimitedExecuteErrorHandler = (reason:"ratelimit"|"others")=>void;
 export interface ApiRateLimitedExecuteOptions {
     refreshSeconds?: number,
@@ -92,9 +91,9 @@ export class ApiRateLimitedExecutor{
                     }
                     else{
                         // if other error, just execute next request
+                        this.requestsQueue.shift(); // remove first
                         setTimeout(this.execute.bind(this),this.delay)
                     }
-                    console.log("error",reason);
                 }
                 const onSuccess = () => {
                     if (resulted) return;
@@ -105,7 +104,6 @@ export class ApiRateLimitedExecutor{
 
                     // execute next request
                     setTimeout(this.execute.bind(this),this.delay)
-                    console.log("success");
                 }
                 current(onSuccess, onError);
             }

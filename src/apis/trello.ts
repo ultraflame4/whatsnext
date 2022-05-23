@@ -101,9 +101,11 @@ export namespace TrelloApi {
                 }
                 function onError(apierror:Trello.TrelloApiError) {
                     console.warn("Warning Api Error",apierror)
-                    if (apierror.code==="401"){
+                    if (apierror.code==="401" || apierror.code==="400"){
                         console.warn("Trello Authentication failed")
                         alert("Trello Authentication failed")
+                        error("others")
+
                         TrelloAuthManager.logOut()
                         vRoute("/login")
                     }
@@ -127,7 +129,9 @@ export namespace TrelloApi {
     export class Board{
 
         public static getAllOpen():Promise<Trello.BoardObject[]> {
-            return TrelloApi.request<Trello.BoardObject[]>("GET", "/members/me/boards", {filter:"open"})
+            let o = TrelloApi.request<Trello.BoardObject[]>("GET", "/members/me/boards", {filter:"open"})
+            console.log("[Trello] Get all open boards",o)
+            return o
         }
 
         public static getAll():Promise<Trello.BoardObject[]> {
