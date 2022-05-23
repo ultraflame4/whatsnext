@@ -45,7 +45,7 @@ const trelloBoards = ref<Trello.BoardObject[]>([]);
 const loginBypassed = ref(Bypass)
 
 onMounted(() => {
-  TrelloApi.getAllOpenBoards().then(boards => {
+  TrelloApi.Board.getAllOpen().then(boards => {
     console.log("test")
     trelloBoards.value = boards;
   })
@@ -111,7 +111,7 @@ onMounted(() => {
     max-height: 100%;
     height: fit-content;
     overflow-y: auto;
-
+    padding-right: 8px;
   }
 
 }
