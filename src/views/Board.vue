@@ -1,8 +1,8 @@
 <template>
 <div class="board">
-  <CardList v-if="isTest" v-for="i in 3" title="Test">
+  <CardList v-if="isTest" v-for="x in 3" title="Test">
     <Card v-for="i in 10">
-
+      card {{x}},{{i}}
     </Card>
   </CardList>
 </div>

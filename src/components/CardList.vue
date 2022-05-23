@@ -20,6 +20,8 @@ function allowDrop(ev: DragEvent) {
   if (ev.dataTransfer) {
     // const data = ev.dataTransfer.getData("card-data")
   }
+  const draggedElement = <HTMLDivElement>document.querySelector<HTMLDivElement>("[dragging]")
+  getElementAtYPos(ev.clientY)?.insertAdjacentElement("beforebegin",draggedElement)
   removeClones()
 
 }
@@ -80,6 +82,13 @@ function onDragOver(ev: DragEvent) {
     entered = true
     onDragEnter(ev)
   }
+
+  let clone = root.value.querySelector<HTMLDivElement>("[clone]")
+  let c = getElementAtYPos(ev.clientY)
+  if (clone&&c){
+    c.insertAdjacentElement("beforebegin", clone)
+  }
+
 }
 
 const props = defineProps<CardProps>()

@@ -1,6 +1,6 @@
 <template>
 <div class="cardlist-card vlayer shadow" draggable="true" @dragstart="startDrag($event)" @dragend="endDrag()" ref="card">
-
+<slot></slot>
 </div>
 </template>
 
@@ -35,6 +35,10 @@ function endDrag() {
 }
 .cardlist-card[dragging]{
   display: none;
+}
+.cardlist-card[clone]{
+  opacity: 20%;
+  outline: 2px solid vars.$accent;
 
 }
 </style>
