@@ -1,5 +1,5 @@
 import {CallbackCollection} from "./others";
-import {vRoute} from "../others";
+import {ApiRateLimitedExecutor, vRoute} from "../others";
 
 
 
@@ -87,31 +87,55 @@ export namespace TrelloAuthManager {
 }
 
 export namespace TrelloApi {
-    export function request<T>(method: "GET" | "POST" | "PUT" | "DELETE", path: string, params?: Object):Promise<T>{
-        return new Promise<T>((resolve, reject) => {
-            function onSuccess(data:T) {
-                resolve(data)
-            }
-            function onError(error:Trello.TrelloApiError) {
-                console.warn("Warning Api Error",error)
-                if (error.code==="401"){
-                    console.warn("Trello Authentication failed")
-                    alert("Trello Authentication failed")
-                    TrelloAuthManager.logOut()
-                    vRoute("/login")
-                }
-                reject(error)
-            }
 
-            Trello.rest(method, path, params, onSuccess, onError)
+    const RateLimitedExecutor = new ApiRateLimitedExecutor()
+
+    import GetBoardParam = Trello.boards.GetBoardParam;
+
+    export function request<T,F=Object>(method: "GET" | "POST" | "PUT" | "DELETE", path: string, params?: F):Promise<T>{
+        return new Promise<T>((resolve, reject) => {
+            RateLimitedExecutor.request((success, error) => {
+                function onSuccess(data:T) {
+                    success()
+                    resolve(data)
+                }
+                function onError(apierror:Trello.TrelloApiError) {
+                    console.warn("Warning Api Error",apierror)
+                    if (apierror.code==="401"){
+                        console.warn("Trello Authentication failed")
+                        alert("Trello Authentication failed")
+                        TrelloAuthManager.logOut()
+                        vRoute("/login")
+                    }
+
+                    if (apierror.code==="429"){
+                        console.warn("Rate Limited")
+                        error("ratelimit")
+                    }
+                    else{
+                        error("others")
+                    }
+
+                    reject(error)
+                }
+
+                Trello.rest(method, path, params, onSuccess, onError)
+            })
         })
     }
 
-    export function getAllOpenBoards():Promise<Trello.BoardObject[]> {
-        return TrelloApi.request<Trello.BoardObject[]>("GET", "/members/me/boards", {filter:"open"})
-    }
+    export class Board{
 
-    export function getAllBoards():Promise<Trello.BoardObject[]> {
-        return TrelloApi.request<Trello.BoardObject[]>("GET", "/members/me/boards")
+        public static getAllOpen():Promise<Trello.BoardObject[]> {
+            return TrelloApi.request<Trello.BoardObject[]>("GET", "/members/me/boards", {filter:"open"})
+        }
+
+        public static getAll():Promise<Trello.BoardObject[]> {
+            return TrelloApi.request<Trello.BoardObject[],GetBoardParam>("GET", "/members/me/boards")
+        }
+
+        public static get(id:string):Promise<Trello.BoardObject> {
+            return TrelloApi.request<Trello.BoardObject>("GET", `/boards/${id}`)
+        }
     }
 }
