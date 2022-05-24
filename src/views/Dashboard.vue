@@ -64,7 +64,7 @@ onMounted(() => {
   display: grid;
   grid-template-rows: 48px auto;
 
-  grid-template-columns: 256px auto;
+  grid-template-columns: 248px auto;
 }
 
 #sidebar {
@@ -75,7 +75,7 @@ onMounted(() => {
   grid-column-end: 2;
   grid-row-start: 1;
   grid-row-end: 3;
-  padding: 0 16px;
+  padding: 0 12px;
   padding-bottom: 16px;
   min-height: 0;
   grid-template-rows: 48px 128px 24px repeat(2, fit-content(calc(calc(100% - 202px) / 2)));
@@ -113,7 +113,7 @@ onMounted(() => {
     max-height: 100%;
     height: fit-content;
     overflow-y: auto;
-    padding-right: 8px;
+    padding-right: 6px;
   }
 
 }

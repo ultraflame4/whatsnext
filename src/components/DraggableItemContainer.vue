@@ -7,12 +7,19 @@
 
 <script lang="ts" setup>
 
-import {onMounted, ref, Ref} from "vue";
+import {onMounted, PropType, ref, Ref} from "vue";
 
-interface itemProps{
-  dragId:string
-}
-const props = defineProps<itemProps>()
+
+const props = defineProps({
+  dragId:{
+    type: String,
+    required:true
+  },
+  axis:{
+    type: String as PropType<"x" | "y">,
+    default: "y",
+  }
+})
 
 const root = <Ref<HTMLDivElement>><any>ref(null)
 
@@ -29,18 +36,21 @@ function allowDrop(ev: DragEvent) {
     // const data = ev.dataTransfer.getData("card-data")
   }
 
-  getElementAtYPos(ev.clientY)?.insertAdjacentElement("beforebegin",draggedElement)
+  getElementAtPos((props.axis==="x"?ev.clientX:ev.clientY))?.insertAdjacentElement("beforebegin",draggedElement)
 
   removeClones()
 
 }
 
-function getElementAtYPos(ypos: number): HTMLDivElement | null {
+function getElementAtPos(pos: number): HTMLDivElement | null {
   const children = root.value.querySelectorAll<HTMLDivElement>(`[draggable-item="${props.dragId}"]`)
   for (let i = 0; i < children.length; i++) {
     let child = children[i]
     const box = child.getBoundingClientRect()
-    if ((box.y + (box.height / 2)) > ypos) {
+    const boxpos = (props.axis==="x"?box.x:box.y)
+    const boxlength = (props.axis==="x"?box.width:box.height)
+
+    if ((boxpos + (boxlength / 2)) > pos) {
       return child
     }
   }
@@ -94,7 +104,7 @@ function onDragOver(ev: DragEvent) {
   }
 
   let clone = root.value.querySelector<HTMLDivElement>("[clone]")
-  let c = getElementAtYPos(ev.clientY)
+  let c = getElementAtPos(props.axis==="x"?ev.clientX:ev.clientY)
   if (clone&&c){
     c.insertAdjacentElement("beforebegin", clone)
   }

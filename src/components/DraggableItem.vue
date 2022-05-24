@@ -7,11 +7,12 @@
 <script lang="ts" setup>
 import {onMounted, Ref, ref} from "vue";
 
-interface itemProps {
-  dragId: string
-}
-
-const props = defineProps<itemProps>()
+const props = defineProps({
+  dragId:{
+    type: String,
+    required:true
+  }
+})
 
 const draggableitem = <Ref<HTMLDivElement>><any>ref(null)
 
@@ -19,6 +20,7 @@ function isDraggable() {
   return (draggableitem.value.getAttribute("data-isdg")==="true"?true:false)
 }
 onMounted(() => {
+  draggableitem.value.style.cursor = "pointer"
   draggableitem.value.setAttribute(`draggable-item`, props.dragId)
   draggableitem.value.addEventListener('mousemove', ev => {
     if (!draggableitem.value.matches(":hover")){

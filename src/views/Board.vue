@@ -1,11 +1,11 @@
 <template>
-<div class="board">
+<DraggableItemContainer class="board" dragId="boardlist" axis="x">
   <CardList v-if="isTest" v-for="x in 3" title="Test">
     <Card v-for="i in 10">
       card {{x}},{{i}}
     </Card>
   </CardList>
-</div>
+</DraggableItemContainer>
 </template>
 
 <script lang="ts" setup>
@@ -14,6 +14,7 @@ import {onBeforeRouteUpdate, useRouter} from "vue-router";
 import CardList from "../components/CardList.vue";
 import Card from "../components/Card.vue";
 import {ref} from "vue";
+import DraggableItemContainer from "../components/DraggableItemContainer.vue";
 
 const router = useRouter()
 const isTest = ref(true)
