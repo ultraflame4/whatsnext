@@ -1,109 +1,46 @@
 <template>
-<DraggableItemContainer dragId="cards" class="cardlist vlayer shadow" >
+  <DraggableItem dragId="boardlist" class="cardlist-ctn vlayer shadow">
     <h1 class="cardlist-title">{{ props.title }}</h1>
-    <slot></slot>
-</DraggableItemContainer>
+    <DraggableItemContainer dragId="cards" class="cardlist">
+      <slot></slot>
+    </DraggableItemContainer>
+  </DraggableItem>
 </template>
 
 <script lang="ts" setup>
 import {ref, Ref} from "vue";
 import DraggableItemContainer from "./DraggableItemContainer.vue";
+import DraggableItem from "./DraggableItem.vue";
 
 interface CardProps {
   title: string,
   listId?: string
 }
 
-function allowDrop(ev: DragEvent) {
-  ev.preventDefault()
-  if (ev.dataTransfer) {
-    // const data = ev.dataTransfer.getData("card-data")
-  }
-  const draggedElement = <HTMLDivElement>document.querySelector<HTMLDivElement>("[dragging]")
-  getElementAtYPos(ev.clientY)?.insertAdjacentElement("beforebegin",draggedElement)
-  removeClones()
-
-}
-
-const root = <Ref<HTMLDivElement>><any>ref(null)
-
-function getElementAtYPos(ypos: number): HTMLDivElement | null {
-  const children = root.value.querySelectorAll<HTMLDivElement>(".cardlist-card")
-  for (let i = 0; i < children.length; i++) {
-    let child = children[i]
-    const box = child.getBoundingClientRect()
-    if ((box.y + (box.height / 2)) > ypos) {
-      return child
-    }
-  }
-  return null
-}
-
-
-function onDragEnter(ev: DragEvent) {
-
-
-  const draggedElement = document.querySelector<HTMLDivElement>("[dragging]")
-
-  let clone = <HTMLDivElement>(<Element>draggedElement).cloneNode(true)
-  clone.removeAttribute("dragging")
-  clone.setAttribute("clone", "")
-  root.value.appendChild(clone)
-}
-
-let entered = false
-
-function removeClones(){
-  entered=false
-
-  root.value.querySelectorAll("[clone]").forEach(value => {
-
-    value.remove()
-  })
-}
-
-function onDragLeave(ev: DragEvent) {
-  // check if still mouse within element
-  let box = root.value.getBoundingClientRect()
-  let x = ev.clientX
-  let y = ev.clientY
-  if (!(box.left < x && box.right > x && box.top < y && box.bottom > y)) {
-    entered = false
-
-    removeClones()
-  }
-}
-
-function onDragOver(ev: DragEvent) {
-  ev.preventDefault()
-  // const over = getElementAtYPos(ev.pageY)
-  if (!entered) {
-    entered = true
-    onDragEnter(ev)
-  }
-
-  let clone = root.value.querySelector<HTMLDivElement>("[clone]")
-  let c = getElementAtYPos(ev.clientY)
-  if (clone&&c){
-    c.insertAdjacentElement("beforebegin", clone)
-  }
-
-}
-
 const props = defineProps<CardProps>()
 </script>
 
 <style lang="scss">
-.cardlist {
+.cardlist-ctn{
   display: grid;
-  grid-template-rows: 24px fit-content(64px);
-  height: fit-content;
+  grid-template-rows: 24px;
+  grid-auto-rows: fit-content(650px);
   width: 256px;
-  border-radius: 8px;
   padding: 8px;
-  gap: 8px;
+  border-radius: 8px;
+  height: fit-content;
+  max-height: 720px;
   box-sizing: border-box;
 
+}
+.cardlist {
+  display: grid;
+  grid-auto-rows: fit-content(64px);
+  border-radius: 6px;
+  overflow-y: auto;
+  gap: 8px;
+  padding: 0 4px;
+  padding-top: 4px;
 }
 
 .cardlist-title {

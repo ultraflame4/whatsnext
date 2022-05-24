@@ -22,11 +22,13 @@ onMounted(() => {
 
 
 function allowDrop(ev: DragEvent) {
+  const draggedElement = <HTMLDivElement>document.querySelector<HTMLDivElement>("[dragging]")
+  if (draggedElement.getAttribute("draggable-item")!==props.dragId){return}
   ev.preventDefault()
   if (ev.dataTransfer) {
     // const data = ev.dataTransfer.getData("card-data")
   }
-  const draggedElement = <HTMLDivElement>document.querySelector<HTMLDivElement>("[dragging]")
+
   getElementAtYPos(ev.clientY)?.insertAdjacentElement("beforebegin",draggedElement)
 
   removeClones()
@@ -47,9 +49,8 @@ function getElementAtYPos(ypos: number): HTMLDivElement | null {
 
 
 function onDragEnter(ev: DragEvent) {
-
-
   const draggedElement = document.querySelector<HTMLDivElement>("[dragging]")
+  if (draggedElement.getAttribute("draggable-item")!==props.dragId){return}
 
   let clone = <HTMLDivElement>(<Element>draggedElement).cloneNode(true)
   clone.removeAttribute("dragging")
@@ -69,6 +70,8 @@ function removeClones(){
 }
 
 function onDragLeave(ev: DragEvent) {
+  const draggedElement = document.querySelector<HTMLDivElement>("[dragging]")
+  if (draggedElement.getAttribute("draggable-item")!==props.dragId){return}
   // check if still mouse within element
   let box = root.value.getBoundingClientRect()
   let x = ev.clientX
@@ -81,6 +84,8 @@ function onDragLeave(ev: DragEvent) {
 }
 
 function onDragOver(ev: DragEvent) {
+  const draggedElement = document.querySelector<HTMLDivElement>("[dragging]")
+  if (draggedElement.getAttribute("draggable-item")!==props.dragId){return}
   ev.preventDefault()
   // const over = getElementAtYPos(ev.pageY)
   if (!entered) {
