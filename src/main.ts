@@ -60,59 +60,6 @@ setRouter(router)
 apiManager.start()
 const app = createApp(App)
 
-app.directive("draggable-item",{
-    created:(el:HTMLElement, binding, vnode, prevVNode) => {
-        let mouseDown = false
-        let dragging = false
-        let mouseDownX = 0
-        let mouseDownY = 0
-        function onMouseDown(ev:MouseEvent) {
-            mouseDown=true
-            mouseDownX=ev.clientX
-            mouseDownY=ev.clientY
-        }
-        function onMouseUp() {
-            mouseDown=false
-            if (dragging){
-                dragEnd()
-            }
-            dragging=false
-
-        }
-        const movementTriggerTreshold = 10
-        function onMouseMove(ev:MouseEvent) {
-
-            if (!mouseDown){
-                return;
-            }
-
-            let deltaX = Math.abs(ev.clientX-mouseDownX)
-            let deltaY = Math.abs(ev.clientY-mouseDownY)
-            if (deltaX<movementTriggerTreshold&&deltaY<movementTriggerTreshold){
-                return
-            }
-            console.log("a")
-            if (mouseDown&&!dragging){
-                dragging=true
-                dragStart()
-            }
-        }
-        function dragStart(){
-            console.log("Start")
-        }
-        function onDragging(){
-            console.log("Start")
-        }
-        function dragEnd(){
-            console.log("End")
-        }
-
-        el.addEventListener("mousedown",onMouseDown)
-        document.addEventListener("mouseup",onMouseUp)
-        document.addEventListener("mousemove",onMouseMove)
-    }
-})
-
 app.use(router)
     .mount('#app')
 
