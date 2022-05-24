@@ -151,5 +151,6 @@ onMounted(() => {
   grid-row-start: 2;
   grid-row-end: 3;
   background: none;
+  overflow-y: auto;
 }
 </style>

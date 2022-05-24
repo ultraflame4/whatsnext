@@ -31,7 +31,10 @@ onBeforeRouteUpdate(to => {
   padding: 16px;
   background: none;
   display: flex;
-  gap: 8px;
+  height: fit-content;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  gap: 16px;
   color: white;
 }
 </style>

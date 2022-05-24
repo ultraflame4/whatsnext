@@ -9,6 +9,7 @@ import Board from "./views/Board.vue"
 import Empty from "./views/Empty.vue"
 import {setRouter} from "./others";
 import apiManager from "./apis/apiManager";
+import draggableComponent from "vuedraggable";
 
 
 const routes: RouteRecordRaw[] = [
@@ -60,6 +61,7 @@ router.beforeEach((to, from, next) => {
 setRouter(router)
 apiManager.start()
 const app = createApp(App)
+
 app.use(router)
     .mount('#app')
 

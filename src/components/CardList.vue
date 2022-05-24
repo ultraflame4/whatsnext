@@ -24,12 +24,11 @@ const props = defineProps<CardProps>()
 .cardlist-ctn{
   display: grid;
   grid-template-rows: 24px;
-  grid-auto-rows: fit-content(650px);
+  grid-auto-rows: fit-content(min(600px,calc(100vh - 150px)));
   width: 256px;
   padding: 8px;
   border-radius: 8px;
   height: fit-content;
-  max-height: 720px;
   box-sizing: border-box;
 
 }

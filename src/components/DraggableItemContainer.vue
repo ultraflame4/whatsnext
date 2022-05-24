@@ -27,23 +27,25 @@ onMounted(() => {
   root.value.setAttribute("draggable-ctn",props.dragId)
 })
 
-
+function getDragged(){
+  return <HTMLDivElement>document.querySelector<HTMLDivElement>("[dragging]")
+}
 function allowDrop(ev: DragEvent) {
-  const draggedElement = <HTMLDivElement>document.querySelector<HTMLDivElement>("[dragging]")
-  if (draggedElement.getAttribute("draggable-item")!==props.dragId){return}
+  const de = getDragged()
+  if (de.getAttribute("draggable-item")!==props.dragId){return}
   ev.preventDefault()
   if (ev.dataTransfer) {
     // const data = ev.dataTransfer.getData("card-data")
   }
 
-  getElementAtPos((props.axis==="x"?ev.clientX:ev.clientY))?.insertAdjacentElement("beforebegin",draggedElement)
+  getElementAtPos((props.axis==="x"?ev.clientX:ev.clientY))?.insertAdjacentElement("beforebegin",de)
 
   removeClones()
 
 }
 
 function getElementAtPos(pos: number): HTMLDivElement | null {
-  const children = root.value.querySelectorAll<HTMLDivElement>(`[draggable-item="${props.dragId}"]`)
+  const children = root.value.querySelectorAll<HTMLDivElement>(`[draggable-item="${props.dragId}"]:not([clone])`)
   for (let i = 0; i < children.length; i++) {
     let child = children[i]
     const box = child.getBoundingClientRect()
@@ -59,10 +61,10 @@ function getElementAtPos(pos: number): HTMLDivElement | null {
 
 
 function onDragEnter(ev: DragEvent) {
-  const draggedElement = document.querySelector<HTMLDivElement>("[dragging]")
-  if (draggedElement.getAttribute("draggable-item")!==props.dragId){return}
+  const de = getDragged()
+  if (de.getAttribute("draggable-item")!==props.dragId){return}
 
-  let clone = <HTMLDivElement>(<Element>draggedElement).cloneNode(true)
+  let clone = <HTMLDivElement>(<Element>de).cloneNode(true)
   clone.removeAttribute("dragging")
   clone.setAttribute("clone", "")
   root.value.appendChild(clone)
@@ -80,8 +82,8 @@ function removeClones(){
 }
 
 function onDragLeave(ev: DragEvent) {
-  const draggedElement = document.querySelector<HTMLDivElement>("[dragging]")
-  if (draggedElement.getAttribute("draggable-item")!==props.dragId){return}
+  const de = getDragged()
+  if (de.getAttribute("draggable-item")!==props.dragId){return}
   // check if still mouse within element
   let box = root.value.getBoundingClientRect()
   let x = ev.clientX
@@ -94,8 +96,8 @@ function onDragLeave(ev: DragEvent) {
 }
 
 function onDragOver(ev: DragEvent) {
-  const draggedElement = document.querySelector<HTMLDivElement>("[dragging]")
-  if (draggedElement.getAttribute("draggable-item")!==props.dragId){return}
+  const de = getDragged()
+  if (de.getAttribute("draggable-item")!==props.dragId){return}
   ev.preventDefault()
   // const over = getElementAtYPos(ev.pageY)
   if (!entered) {
@@ -104,9 +106,9 @@ function onDragOver(ev: DragEvent) {
   }
 
   let clone = root.value.querySelector<HTMLDivElement>("[clone]")
-  let c = getElementAtPos(props.axis==="x"?ev.clientX:ev.clientY)
-  if (clone&&c){
-    c.insertAdjacentElement("beforebegin", clone)
+  let nearestSibling = getElementAtPos(props.axis==="x"?ev.clientX:ev.clientY)
+  if (clone&&nearestSibling){
+    nearestSibling.insertAdjacentElement("beforebegin", clone)
   }
 
 }

@@ -66,5 +66,13 @@ function endDrag() {
 </script>
 
 <style lang="scss">
+@use "../assets/vars";
+[dragging] {
+  display: none !important;
+}
 
+[clone] {
+  opacity: 20%;
+  outline: 2px solid vars.$accent;
+}
 </style>

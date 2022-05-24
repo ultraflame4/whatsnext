@@ -92,7 +92,7 @@ const computedCssStyles = computed(() => {
   padding: 0 8px;
   border-radius: 4px;
   gap: 8px;
-  transition: all 200ms ease-in;
+  transition: all 128ms ease-in;
 
   &[checked="true"] {
     background-color: vars.$accent!important;
