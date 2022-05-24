@@ -64,7 +64,7 @@ onMounted(() => {
   display: grid;
   grid-template-rows: 48px auto;
 
-  grid-template-columns: 248px auto;
+  grid-template-columns: 234px auto;
 }
 
 #sidebar {

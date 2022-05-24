@@ -46,6 +46,8 @@ onMounted(() => {
   }
   else{
     root.value.addEventListener("click", (e: Event) => {
+      const input = root.value.querySelector("input") as HTMLInputElement;
+      input.click()
       if (props.radio){
         root.value.setAttribute("checked","true")
         document.querySelectorAll<HTMLDivElement>(`.section-checkbox[data-name="${props.name}"]`).forEach(el => {
@@ -100,6 +102,7 @@ const computedCssStyles = computed(() => {
       font-size: 16px;
       font-weight: 600;
       color: black;
+      letter-spacing: 0.5px;
     }
   }
 
@@ -110,9 +113,10 @@ const computedCssStyles = computed(() => {
   }
 
   & > p {
+
     margin: 0;
     font-size: 14px;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     color: #ccc;
     font-weight: 400;
     transition: font-size 0.1s ease;
@@ -125,6 +129,7 @@ const computedCssStyles = computed(() => {
     accent-color: var(--accent-color);
     &[data-fullbar="true"]{
       accent-color: vars.$accent;
+      appearance: none;
     }
   }
 
