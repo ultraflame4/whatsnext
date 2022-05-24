@@ -1,18 +1,25 @@
 <template>
-<DraggableItemContainer dragId="cards" class="cardlist vlayer shadow" >
-    <h1 class="cardlist-title">{{ props.title }}</h1>
+  <div @drop="allowDrop($event)" @dragover="onDragOver($event)"
+       @dragenter.prevent @dragleave="onDragLeave($event)" ref="root">
     <slot></slot>
-</DraggableItemContainer>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import {ref, Ref} from "vue";
-import DraggableItemContainer from "./DraggableItemContainer.vue";
 
-interface CardProps {
-  title: string,
-  listId?: string
+import {onMounted, ref, Ref} from "vue";
+
+interface itemProps{
+  dragId:string
 }
+const props = defineProps<itemProps>()
+
+const root = <Ref<HTMLDivElement>><any>ref(null)
+
+onMounted(() => {
+  root.value.setAttribute("draggable-ctn",props.dragId)
+})
+
 
 function allowDrop(ev: DragEvent) {
   ev.preventDefault()
@@ -21,14 +28,13 @@ function allowDrop(ev: DragEvent) {
   }
   const draggedElement = <HTMLDivElement>document.querySelector<HTMLDivElement>("[dragging]")
   getElementAtYPos(ev.clientY)?.insertAdjacentElement("beforebegin",draggedElement)
+
   removeClones()
 
 }
 
-const root = <Ref<HTMLDivElement>><any>ref(null)
-
 function getElementAtYPos(ypos: number): HTMLDivElement | null {
-  const children = root.value.querySelectorAll<HTMLDivElement>(".cardlist-card")
+  const children = root.value.querySelectorAll<HTMLDivElement>(`[draggable-item="${props.dragId}"]`)
   for (let i = 0; i < children.length; i++) {
     let child = children[i]
     const box = child.getBoundingClientRect()
@@ -90,29 +96,8 @@ function onDragOver(ev: DragEvent) {
 
 }
 
-const props = defineProps<CardProps>()
 </script>
 
 <style lang="scss">
-.cardlist {
-  display: grid;
-  grid-template-rows: 24px fit-content(64px);
-  height: fit-content;
-  width: 256px;
-  border-radius: 8px;
-  padding: 8px;
-  gap: 8px;
-  box-sizing: border-box;
 
-}
-
-.cardlist-title {
-  grid-row-start: 1;
-  grid-row-end: 2;
-  font-size: 14px;
-  font-weight: 500;
-  margin: auto 0;
-  margin-left: 8px;
-
-}
 </style>
